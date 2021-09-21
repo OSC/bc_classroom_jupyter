@@ -1,0 +1,9 @@
+---
+name: Classroom Jupyter
+category: Interactive Apps
+subcategory: classroom
+role: batch_connect
+description: |
+  This app will launch a [Jupyter] server for use in a classroom setting.
+
+  [Jupyter]: https://jupyter.org/

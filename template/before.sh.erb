@@ -1,0 +1,58 @@
+#!/bin/bash
+
+exec &> >(tee -a "pod.log")
+
+source /etc/profile.d/lmod.sh
+source /bin/find_host_port
+source /bin/save_passwd_as_secret
+source /bin/create_salt_and_sha1
+
+# Safari users hit this error https://github.com/jupyterlab/jupyterlab/issues/5486
+# so let's make a new workspace dir that's this job's PWD and copy the defult /lab
+# workspace over there so folks can update it.
+WORKSPACE_DIR="$HOME/.jupyter/lab/workspaces"
+FILES=$(ls $WORKSPACE_DIR)
+
+for FILE in ${FILES[@]}
+do
+  ID=$(jq -r '.metadata.id' $WORKSPACE_DIR/$FILE)
+
+  if [[ $ID == "/lab" ]]; then
+    WORKSPACE_FILE="$WORKSPACE_DIR/$FILE"
+    break
+  fi
+done
+
+if [[ ${WORKSPACE_FILE+x} ]]; then
+  cp "$WORKSPACE_FILE" .
+fi
+
+if [[ ${OSC_CLASS_FILES+x} ]]; then
+  # Copy over classroom materials
+  set -x
+  rsync -avz --ignore-existing "$OSC_CLASS_FILES" "$HOME/osc_classes/$OSC_CLASS_ID"
+  { set +x; } 2>/dev/null
+fi
+
+# The `$CONFIG_FILE` environment variable is exported as it is used in the main
+# `script.sh.erb` file when launching the Jupyter server.
+export CONFIG_FILE="$PWD/config.py"
+export NOTEBOOK_ROOT="$HOME/osc_classes/$OSC_CLASS_ID"
+
+# Generate Jupyter configuration file with secure file permissions
+(
+umask 077
+cat > "${CONFIG_FILE}" << EOL
+c.KernelSpecManager.ensure_native_kernel = False
+c.NotebookApp.ip = '*'
+c.NotebookApp.port = 8080
+c.NotebookApp.base_url = '/node/${HOST_CFG}/${PORT_CFG}/'
+c.NotebookApp.terminado_settings = {'shell_command': ['/bin/bash', '--login', '-i']}
+c.NotebookApp.port_retries = 0
+c.NotebookApp.password = u'sha1:${SALT}:${PASSWORD_SHA1}'
+c.NotebookApp.open_browser = False
+c.NotebookApp.allow_origin = '*'
+c.NotebookApp.notebook_dir = '${NOTEBOOK_ROOT}'
+c.NotebookApp.disable_check_xsrf = True
+EOL
+)
