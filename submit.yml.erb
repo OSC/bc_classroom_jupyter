@@ -1,12 +1,5 @@
 
 <% 
-  if node_type =~ /owens/
-    compute_cluster = "owens"
-    apps_path = "/usr/local"
-  elsif node_type =~ /pitzer/
-    compute_cluster = "pitzer"
-    apps_path = "/apps"
-  end
 
   mounts = {
     'home'    => OodSupport::User.new.home,
@@ -82,5 +75,5 @@ script:
       - type: host
         name: apps
         host_type: Directory
-        path: /apps/<%= compute_cluster %>
-        destination_path: <%= apps_path %>
+        path: /apps/pitzer
+        destination_path: /apps
