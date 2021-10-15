@@ -7,6 +7,10 @@ source /bin/find_host_port
 source /bin/save_passwd_as_secret
 source /bin/create_salt_and_sha1
 
+
+module purge
+module load project/classroom xalt/latest jupyter/<%= context.classroom %>
+
 # Safari users hit this error https://github.com/jupyterlab/jupyterlab/issues/5486
 # so let's make a new workspace dir that's this job's PWD and copy the defult /lab
 # workspace over there so folks can update it.

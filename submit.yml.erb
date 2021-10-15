@@ -1,6 +1,5 @@
 
-<% 
-
+<%
   mounts = {
     'home'    => OodSupport::User.new.home,
     'support' => OodSupport::User.new('support').home,
@@ -16,15 +15,11 @@ script:
   native:
     container:
       name: "jupyter"
-      image: "docker-registry.osc.edu/ondemand/ondemand-base-rhel7:0.2.0"
+      image: "docker-registry.osc.edu/ondemand/ondemand-base-rhel7:0.3.1"
       image_pull_policy: "IfNotPresent"
       command: ["/bin/bash","-l","<%= staged_root %>/job_script_content.sh"]
       restart_policy: 'OnFailure'
       env:
-        # NB_UID: "<%= Etc.getpwnam(ENV['USER']).uid %>"
-        # NB_USER: "<%= ENV['USER'] %>"
-        # NB_GID: "<%= Etc.getpwnam(ENV['USER']).gid %>"
-        # CLUSTER: "<%= compute_cluster %>"
         KUBECONFIG: "/dev/null"
       port: "8080"
       cpu: "<%= num_cores %>"
@@ -65,12 +60,12 @@ script:
       - type: host
         name: lmod-init
         host_type: File
-        path: /apps/<%= compute_cluster %>/lmod/lmod.sh
+        path: /apps/pitzer/lmod/lmod.sh
         destination_path: /etc/profile.d/lmod.sh
       - type: host
         name: intel
         host_type: Directory
-        path: /nfsroot/<%= compute_cluster %>/opt/intel
+        path: /nfsroot/pitzer/opt/intel
         destination_path: /opt/intel
       - type: host
         name: apps
