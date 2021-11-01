@@ -1,31 +1,31 @@
 <%-
-  groups = OodSupport::User.new.groups.sort_by(&:id).tap { |groups|
+  groups = OodSupport::User.new.groups.sort_by(&:id).tap do |groups|
     groups.unshift(groups.delete(OodSupport::Process.group))
-  }.map(&:name).grep(/^P./)
+  end.map(&:name).grep(/^P./)
 
   classrooms = OodAppkit.clusters.each_with_object({}) do |cluster, hash|
-    if cluster.job_config[:adapter] == 'kubernetes'
-      hash.merge!(cluster.custom_config[:classrooms])
+    if cluster.kubernetes?
+      hash.merge!(cluster.custom_config[:classrooms].to_h)
     end
   end.select do |k,v|
-    groups.include?(v) && v.start_with?('jupyter')
+    k.start_with?('jupyter') && groups.include?(v)
   end.map do |k,v|
     [ k.gsub('jupyter/', ''), v ]
   end
-
 -%>
 ---
-cluster:
-  - "kubernetes"
-  - "kubernetes-test"
-  - "kubernetes-dev"
 form:
+  - cluster
   - classroom
   - account
   - jupyterlab_switch
   - bc_num_hours
   - num_cores
 attributes:
+  cluster:
+    - "kubernetes"
+    - "kubernetes-test"
+    - "kubernetes-dev"
   account:
     widget: "hidden_field"
   jupyterlab_switch:
@@ -41,7 +41,7 @@ attributes:
       Number of cores on node type (4 GB per core unless requesting whole
       node). Leave blank if requesting full node.
     min: 1
-    max: 28
+    max: 8
     step: 1
   <%- if classrooms.size >= 1 -%>
   classroom:  
