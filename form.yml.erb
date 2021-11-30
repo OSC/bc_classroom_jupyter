@@ -14,18 +14,17 @@
   end
 -%>
 ---
+cluster:
+  - "kubernetes"
+  - "kubernetes-test"
+  - "kubernetes-dev"
 form:
-  - cluster
   - classroom
   - account
   - jupyterlab_switch
   - bc_num_hours
   - num_cores
 attributes:
-  cluster:
-    - "kubernetes"
-    - "kubernetes-test"
-    - "kubernetes-dev"
   account:
     widget: "hidden_field"
   jupyterlab_switch:
