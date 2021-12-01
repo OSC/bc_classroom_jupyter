@@ -42,8 +42,8 @@ attributes:
     min: 1
     max: 8
     step: 1
+  classroom:
   <%- if classrooms.size >= 1 -%>
-  classroom:  
     widget: select
     options:
       <%- classrooms.each do |key, value| %>
@@ -52,4 +52,7 @@ attributes:
         data-set-account: "<%= value %>"
         ]
       <%- end %>
+  <%- else -%>
+    widget: hidden_field
+    value: 'no_classroom'
   <%- end -%>

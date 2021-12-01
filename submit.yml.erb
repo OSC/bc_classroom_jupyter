@@ -1,5 +1,12 @@
 
 <%
+  err_msg = "You are not a part of any classroom project. Restarting your web \
+  server in the help menu may fix the issue. You may also have to wait if you've \
+  recently been added to the project. Reach out to your instructor or \
+  contact support through the help menu."
+
+  raise StandardError, err_msg  if classroom == 'no_classroom'
+
   mounts = {
     'home'    => OodSupport::User.new.home,
     'support' => OodSupport::User.new('support').home,
