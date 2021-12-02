@@ -14,11 +14,30 @@
     'scratch' => '/fs/scratch',
     'ess'     => '/fs/ess',
   }
+
+  container_sizes = {
+    'small': {
+      'cpu': 500,
+      'memory': 2
+    },
+    'medium': {
+      'cpu': 2000,
+      'memory': 8
+    },
+    'large': {
+      'cpu': 4000,
+      'memory': 16
+    },
+    'extra-large': {
+      'cpu': 8000,
+      'memory': 32
+    },
+  }
 -%>
 ---
 script:
   accounting_id: "<%= account %>"
-  wall_time: "<%= bc_num_hours.to_i * 3600 %>"
+  wall_time: "<%= time.to_f * 3600 %>"
   native:
     container:
       name: "jupyter"
@@ -29,8 +48,8 @@ script:
       env:
         KUBECONFIG: "/dev/null"
       port: "8080"
-      cpu: "<%= num_cores %>"
-      memory: "<%= num_cores.to_i * 4 %>Gi"
+      cpu: "<%= container_sizes[size.to_sym][:cpu] %>m"
+      memory: "<%= container_sizes[size.to_sym][:memory] %>Gi"
     mounts:
     <%- mounts.each_pair do |name, mount| -%>
       - type: host
