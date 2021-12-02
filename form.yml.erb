@@ -22,8 +22,8 @@ form:
   - classroom
   - account
   - jupyterlab_switch
-  - bc_num_hours
-  - num_cores
+  - size
+  - time
 attributes:
   account:
     widget: "hidden_field"
@@ -32,16 +32,25 @@ attributes:
     label: "Use JupyterLab instead of Jupyter Notebook?"
     help: |
       JupyterLab is the next generation of Jupyter, and is completely compatible with existing Jupyter Notebooks.
-  num_cores:
-    widget: "number_field"
-    label: "Number of cores"
-    value: 1
+  time:
+    widget: "select"
+    options:
+      - [ "1.5 hours", "1.5"]
+      - [ "3 hours", "3"]
+      - [ "6 hours", "6"]
+    required: true
+  size:
+    widget: "select"
+    options:
+      - "small"
+      - "medium"
+      - "large"
+      - "exra-large"
     help: |
-      Number of cores on node type (4 GB per core unless requesting whole
-      node). Leave blank if requesting full node.
-    min: 1
-    max: 8
-    step: 1
+      * **small** - less than 1 core & 2 GB of memory.
+      * **medium** - 2 cores & 8 GB of memory.
+      * **large** - 4 cores & 16 GB of memory.
+      * **extra-large** - 8 cores & 32 GB of memory.
   classroom:
   <%- if classrooms.size >= 1 -%>
     widget: select
