@@ -1,7 +1,7 @@
 ---
 name: Classroom Jupyter
 category: Interactive Apps
-subcategory: classroom
+subcategory: Classrooms
 role: batch_connect
 description: |
   This app will launch a [Jupyter] server for use in a classroom setting.
