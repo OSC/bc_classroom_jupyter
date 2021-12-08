@@ -50,6 +50,8 @@ script:
       port: "8080"
       cpu: "<%= container_sizes[size.to_sym][:cpu] %>m"
       memory: "<%= container_sizes[size.to_sym][:memory] %>Gi"
+    node_selector:
+      osc.edu/role: ondemand
     mounts:
     <%- mounts.each_pair do |name, mount| -%>
       - type: host
