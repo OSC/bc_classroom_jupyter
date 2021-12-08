@@ -11,4 +11,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - initial release
 
-[Unreleased]: https://github.com/OSC/bc_osc_rstudio_server/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/OSC/bc_classroom_jupyter/compare/v0.1.0...HEAD
