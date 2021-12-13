@@ -68,7 +68,7 @@ attributes:
           "small", "small",
         ]
       - [
-          "medium", "medium"
+          "medium", "medium",
           <%- classrooms.each do |cr| %>
             <%- unless cr[:size].to_i >= 1 %>
             data-option-for-classroom-<%= cr[:name].to_s.gsub('_', '-') %>: false,
