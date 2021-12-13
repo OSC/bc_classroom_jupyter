@@ -10,7 +10,14 @@
   end.select do |k,v|
     k.start_with?('jupyter') && groups.include?(v)
   end.map do |k,v|
-    [ k.gsub('jupyter/', ''), v ]
+    tokens = k.gsub('jupyter/', '').split('/')
+
+    {
+      name: tokens[0].nil? ? 'unknown' : tokens[0],
+      size: tokens[1].nil? ? 1 : tokens[1].to_i,
+      time: tokens[2].nil? ? 1 : tokens[2].to_i,
+      account: v,
+    }
   end
 -%>
 ---
@@ -36,29 +43,72 @@ attributes:
     widget: "select"
     options:
       - [ "1.5 hours", "1.5"]
-      - [ "3 hours", "3"]
-      - [ "6 hours", "6"]
+      - [
+          "3 hours", "3",
+          <%- classrooms.each do |cr| %>
+            <%- unless cr[:time].to_i >= 3 %>
+            data-option-for-classroom-<%= cr[:name].to_s.gsub('_', '-') %>: false,
+            <%- end %>
+          <%- end %>
+        ]
+      - [
+          "6 hours", "6",
+          <%- classrooms.each do |cr| %>
+            <%- unless cr[:time].to_i >= 6 %>
+            data-option-for-classroom-<%= cr[:name].to_s.gsub('_', '-') %>: false,
+            <%- end %>
+          <%- end %>
+        ]
     required: true
+    help:
+      Instructors can request longer times.
   size:
     widget: "select"
     options:
-      - "small"
-      - "medium"
-      - "large"
-      - "exra-large"
+      - [
+          "small", "small",
+        ]
+      - [
+          "medium", "medium"
+          <%- classrooms.each do |cr| %>
+            <%- unless cr[:size].to_i >= 1 %>
+            data-option-for-classroom-<%= cr[:name].to_s.gsub('_', '-') %>: false,
+            <%- end %>
+          <%- end %>
+        ]
+      - [
+          "large", "large",
+          <%- classrooms.each do |cr| %>
+            <%- unless cr[:size].to_i >= 2 %>
+            data-option-for-classroom-<%= cr[:name].to_s.gsub('_', '-') %>: false,
+            <%- end %>
+          <%- end %>
+        ]
+      - [
+          "exra-large", "exra-large",
+          <%- classrooms.each do |cr| %>
+            <%- unless cr[:size].to_i >= 3 %>
+            data-option-for-classroom-<%= cr[:name].to_s.gsub('_', '-') %>: false,
+            <%- end %>
+          <%- end %>
+        ]
     help: |
+      Larger sizes may not be applicable for your classroom. Instructors can request larger
+      sizes.
+
       * **small** - less than 1 core & 2 GB of memory.
       * **medium** - 2 cores & 8 GB of memory.
       * **large** - 4 cores & 16 GB of memory.
       * **extra-large** - 8 cores & 32 GB of memory.
+
   classroom:
   <%- if classrooms.size >= 1 -%>
     widget: select
     options:
-      <%- classrooms.each do |key, value| %>
+      <%- classrooms.each do |cr| %>
       - [
-        "<%= key.gsub('_', ' ') %>", "<%= key %>",
-        data-set-account: "<%= value %>"
+        "<%= cr[:name].gsub('_', ' ') %>", "<%= cr[:name] %>",
+        data-set-account: "<%= cr[:account] %>"
         ]
       <%- end %>
   <%- else -%>
