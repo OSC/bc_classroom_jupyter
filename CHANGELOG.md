@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.2.1] - 2022-01-05
+
+### Fixed
+
+- ~/osc_classes/CLASSROOM directory has to be exist before attempting to rsync
+  [12](https://github.com/OSC/bc_classroom_jupyter/pull/12)
+
 ## [0.2.0] - 2021-12-16
 
 ### Changed
