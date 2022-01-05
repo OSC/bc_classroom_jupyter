@@ -34,6 +34,7 @@ fi
 if [[ ${OSC_CLASS_FILES+x} ]]; then
   # Copy over classroom materials
   set -x
+  mkdir -p "$HOME/osc_classes/$OSC_CLASS_ID"
   rsync -avz --ignore-existing "$OSC_CLASS_FILES" "$HOME/osc_classes/$OSC_CLASS_ID"
   { set +x; } 2>/dev/null
 fi
