@@ -84,7 +84,7 @@ attributes:
           <%- end %>
         ]
       - [
-          "exra-large", "exra-large",
+          "extra-large", "extra-large",
           <%- classrooms.each do |cr| %>
             <%- unless cr[:size].to_i >= 3 %>
             data-option-for-classroom-<%= cr[:name].to_s.gsub('_', '-') %>: false,
