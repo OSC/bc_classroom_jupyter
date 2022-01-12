@@ -95,6 +95,7 @@ script:
         host_type: Directory
         path: /nfsroot/pitzer/opt/intel
         destination_path: /opt/intel
+      # We're using pitzer modules on owens systems. K8s nodes mount both app folders.
       - type: host
         name: apps
         host_type: Directory
