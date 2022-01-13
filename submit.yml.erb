@@ -33,6 +33,8 @@
       'memory': 32
     },
   }
+
+  apps_path = compute_cluster == 'pitzer' ? '/apps' : '/usr/local'
 -%>
 ---
 script:
@@ -88,16 +90,15 @@ script:
       - type: host
         name: lmod-init
         host_type: File
-        path: /apps/pitzer/lmod/lmod.sh
+        path: /apps/<%= compute_cluster %>/lmod/lmod.sh
         destination_path: /etc/profile.d/lmod.sh
       - type: host
         name: intel
         host_type: Directory
-        path: /nfsroot/pitzer/opt/intel
+        path: /nfsroot/<%= compute_cluster %>/opt/intel
         destination_path: /opt/intel
-      # We're using pitzer modules on owens systems. K8s nodes mount both app folders.
       - type: host
         name: apps
         host_type: Directory
-        path: /apps/pitzer
-        destination_path: /apps
+        path: "/apps/<%= compute_cluster %>"
+        destination_path: "<%= apps_path %>"

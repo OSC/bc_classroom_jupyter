@@ -16,6 +16,7 @@
       name: tokens[0].nil? ? 'unknown' : tokens[0],
       size: tokens[1].nil? ? 1 : tokens[1].to_i,
       time: tokens[2].nil? ? 1 : tokens[2].to_i,
+      compute_cluster: tokens[3].nil? ? 'pitzer' : tokens[3].to_s,
       account: v,
     }
   end
@@ -31,8 +32,11 @@ form:
   - jupyterlab_switch
   - size
   - time
+  - compute_cluster
 attributes:
   account:
+    widget: "hidden_field"
+  compute_cluster:
     widget: "hidden_field"
   jupyterlab_switch:
     widget: "check_box"
@@ -107,7 +111,8 @@ attributes:
       <%- classrooms.each do |cr| %>
       - [
         "<%= cr[:name].gsub('_', ' ') %>", "<%= cr[:name] %>",
-        data-set-account: "<%= cr[:account] %>"
+        data-set-account: "<%= cr[:account] %>",
+        data-set-compute-cluster: "<%= cr[:compute_cluster] %>"
         ]
       <%- end %>
   <%- else -%>
