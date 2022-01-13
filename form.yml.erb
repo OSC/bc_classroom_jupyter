@@ -46,7 +46,9 @@ attributes:
   time:
     widget: "select"
     options:
-      - [ "1.5 hours", "1.5"]
+      - [
+          "1.5 hours", "1.5",
+        ]
       - [
           "3 hours", "3",
           <%- classrooms.each do |cr| %>
@@ -63,7 +65,6 @@ attributes:
             <%- end %>
           <%- end %>
         ]
-    required: true
     help: Instructors can request longer times.
   size:
     widget: "select"
@@ -116,6 +117,6 @@ attributes:
         ]
       <%- end %>
   <%- else -%>
-    widget: hidden_field
+    widget: 'hidden_field'
     value: 'no_classroom'
   <%- end -%>
