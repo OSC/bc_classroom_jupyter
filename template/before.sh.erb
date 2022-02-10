@@ -39,6 +39,10 @@ if [[ ${OSC_CLASS_FILES+x} ]]; then
   { set +x; } 2>/dev/null
 fi
 
+SUBMIT_SCRIPT="$OSC_CLASS_DIR/submission/$(whoami).sh"
+[ -f $SUBMIT_SCRIPT ] && $SUBMIT_SCRIPT
+
+
 # The `$CONFIG_FILE` environment variable is exported as it is used in the main
 # `script.sh.erb` file when launching the Jupyter server.
 export CONFIG_FILE="$PWD/config.py"
