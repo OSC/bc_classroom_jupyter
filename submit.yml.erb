@@ -53,7 +53,7 @@ script:
       cpu: "<%= container_sizes[size.to_sym][:cpu] %>m"
       memory: "<%= container_sizes[size.to_sym][:memory] %>Gi"
     node_selector:
-      osc.edu/role: ondemand
+      node-role.kubernetes.io/ondemand: ''
     mounts:
     <%- mounts.each_pair do |name, mount| -%>
       - type: host
