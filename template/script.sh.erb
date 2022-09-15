@@ -1,3 +1,5 @@
 #!/bin/bash
 
+cd $NOTEBOOK_ROOT
+
 jupyter <%= context.jupyterlab_switch == "1" ? "lab" : "notebook" %> --config="$CONFIG_FILE"

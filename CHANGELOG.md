@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.4.1] - 2022-09-15
+
+### Changed
+
+- Terminals will now start in the NOTEBOOK_ROOT ($HOME/osc_classes/$OSC_CLASS_ID) instead of the
+  job's staging directory in [22](https://github.com/OSC/bc_classroom_jupyter/pull/22).
+
 ## [0.4.0] - 2022-06-03
 
 ### Changed
@@ -50,7 +57,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - initial release
 
-[Unreleased]: https://github.com/OSC/bc_classroom_jupyter/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/OSC/bc_classroom_jupyter/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/OSC/bc_classroom_jupyter/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/OSC/bc_classroom_jupyter/compare/v0.3.1...v0.4.0
 [0.3.1]: https://github.com/OSC/bc_classroom_jupyter/compare/v0.3.0...v0.3.1
 [0.3.0]: https://github.com/OSC/bc_classroom_jupyter/compare/v0.2.2...v0.3.0
