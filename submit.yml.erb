@@ -52,6 +52,10 @@ script:
       port: "8080"
       cpu: "<%= container_sizes[size.to_sym][:cpu] %>m"
       memory: "<%= container_sizes[size.to_sym][:memory] %>Gi"
+      startup_probe:
+        initial_delay_seconds: 30
+        period_seconds: 60
+        failure_threshold: 10
     node_selector:
       node-role.kubernetes.io/ondemand: ''
     mounts:
