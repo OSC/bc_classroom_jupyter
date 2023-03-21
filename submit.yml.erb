@@ -34,7 +34,7 @@
     },
   }
 
-  apps_path = compute_cluster == 'pitzer' ? '/apps' : '/usr/local'
+  apps_path = cluster_fs == 'pitzer' ? '/apps' : '/usr/local'
 -%>
 ---
 script:
@@ -90,15 +90,15 @@ script:
       - type: host
         name: lmod-init
         host_type: File
-        path: /apps/<%= compute_cluster %>/lmod/lmod.sh
+        path: /apps/<%= cluster_fs %>/lmod/lmod.sh
         destination_path: /etc/profile.d/lmod.sh
       - type: host
         name: intel
         host_type: Directory
-        path: /nfsroot/<%= compute_cluster %>/opt/intel
+        path: /nfsroot/<%= cluster_fs %>/opt/intel
         destination_path: /opt/intel
       - type: host
         name: apps
         host_type: Directory
-        path: "/apps/<%= compute_cluster %>"
+        path: "/apps/<%= cluster_fs %>"
         destination_path: "<%= apps_path %>"
