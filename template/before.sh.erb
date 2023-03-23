@@ -1,12 +1,23 @@
 #!/bin/bash
 
+<%- if context.cluster =~ /kubernetes/ -%>
 exec &> >(tee -a "pod.log")
 
 source /etc/profile.d/lmod.sh
 source /bin/find_host_port
 source /bin/save_passwd_as_secret
 source /bin/create_salt_and_sha1
+<%- else -%>
+[[ $(type -t module) == "function" ]] && export -f module
 
+# Find available port to run server on
+port=$(find_port ${host})
+
+# Generate SHA1 encrypted password (requires OpenSSL installed)
+SALT="$(create_passwd 16)"
+password="$(create_passwd 16)"
+PASSWORD_SHA1="$(echo -n "${password}${SALT}" | openssl dgst -sha1 | awk '{print $NF}')"
+<%- end -%>
 
 export OSC_CLASS_ID="<%= context.classroom %>"
 export OSC_PROJECT_ID="<%= context.account %>"
