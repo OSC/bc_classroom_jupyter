@@ -7,11 +7,15 @@ source /etc/profile.d/lmod.sh
 source /bin/find_host_port
 source /bin/save_passwd_as_secret
 source /bin/create_salt_and_sha1
+export JUPYTER_PORT=8080
 <%- else -%>
 [[ $(type -t module) == "function" ]] && export -f module
 
 # Find available port to run server on
 port=$(find_port ${host})
+JUPYTER_PORT="${port}"
+HOST_CFG="${host}"
+PORT_CFG="${port}"
 
 # Generate SHA1 encrypted password (requires OpenSSL installed)
 SALT="$(create_passwd 16)"
@@ -68,7 +72,7 @@ umask 077
 cat > "${CONFIG_FILE}" << EOL
 c.KernelSpecManager.ensure_native_kernel = False
 c.NotebookApp.ip = '*'
-c.NotebookApp.port = 8080
+c.NotebookApp.port = ${JUPYTER_PORT}
 c.NotebookApp.base_url = '/node/${HOST_CFG}/${PORT_CFG}/'
 c.NotebookApp.terminado_settings = {'shell_command': ['/bin/bash', '--login', '-i']}
 c.NotebookApp.port_retries = 0
