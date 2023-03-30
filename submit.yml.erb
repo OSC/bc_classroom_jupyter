@@ -1,4 +1,3 @@
-
 <%
   err_msg = "You are not a part of any classroom project. Restarting your web \
   server in the help menu may fix the issue. You may also have to wait if you've \
@@ -34,8 +33,10 @@
     },
   }
 
-  apps_path = compute_cluster == 'pitzer' ? '/apps' : '/usr/local'
+  apps_path = cluster_fs == 'pitzer' ? '/apps' : '/usr/local'
 -%>
+
+<% if cluster =~ /kubernetes/ -%>
 ---
 script:
   accounting_id: "<%= account %>"
@@ -90,15 +91,21 @@ script:
       - type: host
         name: lmod-init
         host_type: File
-        path: /apps/<%= compute_cluster %>/lmod/lmod.sh
+        path: /apps/<%= cluster_fs %>/lmod/lmod.sh
         destination_path: /etc/profile.d/lmod.sh
       - type: host
         name: intel
         host_type: Directory
-        path: /nfsroot/<%= compute_cluster %>/opt/intel
+        path: /nfsroot/<%= cluster_fs %>/opt/intel
         destination_path: /opt/intel
       - type: host
         name: apps
         host_type: Directory
-        path: "/apps/<%= compute_cluster %>"
+        path: "/apps/<%= cluster_fs %>"
         destination_path: "<%= apps_path %>"
+<%- else -%>
+script:
+  accounting_id: "<%= account %>"
+  wall_time: "<%= time.to_f * 3600 %>"
+  gpus_per_node: 1
+<%- end -%>
