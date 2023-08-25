@@ -13,8 +13,8 @@
 
         {
           name: name,
-          size: class_config.fetch('size', 1),
-          time: class_config.fetch('time', 1),
+          size: class_config.fetch('size', 1).to_i,
+          time: class_config.fetch('time', 1).to_i,
           cluster_fs: class_config.fetch('cluster_fs', 'pitzer'),
           module_type: class_config.fetch('module_type', 'default'),
           account: class_config.fetch('project', nil),
