@@ -14,7 +14,7 @@
         {
           name: name,
           size: class_config.fetch('size', 1).to_i,
-          time: class_config.fetch('time', 1).to_i,
+          hours: class_config.fetch('hours', 1).to_i,
           cluster_fs: class_config.fetch('cluster_fs', 'pitzer'),
           module_type: class_config.fetch('module_type', 'default'),
           account: class_config.fetch('project', nil),
@@ -35,7 +35,7 @@ form:
   - account
   - jupyterlab_switch
   - size
-  - time
+  - hours
   - cluster_fs
   - module_type
 attributes:
@@ -52,7 +52,7 @@ attributes:
     label: "Use JupyterLab instead of Jupyter Notebook?"
     help: |
       JupyterLab is the next generation of Jupyter, and is completely compatible with existing Jupyter Notebooks.
-  time:
+  hours:
     widget: "select"
     options:
       - [
@@ -61,7 +61,7 @@ attributes:
       - [
           "3 hours", "3",
           <%- classrooms.each do |cr| %>
-            <%- unless cr[:time].to_i >= 3 %>
+            <%- unless cr[:hours].to_i >= 3 %>
             data-option-for-classroom-<%= cr[:name].to_s.gsub('_', '-') %>: false,
             <%- end %>
           <%- end %>
@@ -69,7 +69,7 @@ attributes:
       - [
           "6 hours", "6",
           <%- classrooms.each do |cr| %>
-            <%- unless cr[:time].to_i >= 6 %>
+            <%- unless cr[:hours].to_i >= 6 %>
             data-option-for-classroom-<%= cr[:name].to_s.gsub('_', '-') %>: false,
             <%- end %>
           <%- end %>
