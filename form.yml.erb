@@ -1,4 +1,18 @@
 <%-
+
+  def size_lookup
+    Hash.new(0).tap do |hsh|
+      hsh[:small] = 0
+      hsh[:medium] = 1
+      hsh[:large] = 2
+      hsh[:xlarge] = 3
+    end
+  end
+
+  def size_to_num(size)
+    size_lookup[size.to_sym].to_i
+  end
+
   groups = OodSupport::User.new.groups.sort_by(&:id).tap do |groups|
     groups.unshift(groups.delete(OodSupport::Process.group))
   end.map(&:name).grep(/^P./)
@@ -13,7 +27,7 @@
 
         {
           name: name,
-          size: class_config.fetch('size', 1).to_i,
+          size: size_to_num(class_config.fetch('size', 'small')),
           hours: class_config.fetch('hours', 1).to_i,
           cluster_fs: class_config.fetch('cluster_fs', 'pitzer'),
           module_type: class_config.fetch('module_type', 'default'),
