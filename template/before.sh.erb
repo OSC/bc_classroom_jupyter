@@ -49,11 +49,18 @@ if [[ ${WORKSPACE_FILE+x} ]]; then
   cp "$WORKSPACE_FILE" .
 fi
 
+if [[ "$OSC_PROJECT_ID" == "PDE"* ]]; then
+  export NOTEBOOK_ROOT="/fs/ess/$OSC_PROJECT_ID/$OSC_CLASS_ID/workspace/$(whoami)"
+else
+  export NOTEBOOK_ROOT="$HOME/osc_classes/$OSC_CLASS_ID"
+fi
+
+mkdir -p "$NOTEBOOK_ROOT"
+
 if [[ ${OSC_CLASS_FILES+x} ]]; then
   # Copy over classroom materials
   set -x
-  mkdir -p "$HOME/osc_classes/$OSC_CLASS_ID"
-  rsync -avz --ignore-existing "$OSC_CLASS_FILES" "$HOME/osc_classes/$OSC_CLASS_ID"
+  rsync -avz --ignore-existing "$OSC_CLASS_FILES" "$NOTEBOOK_ROOT"
   { set +x; } 2>/dev/null
 fi
 
@@ -64,7 +71,6 @@ SUBMIT_SCRIPT="$OSC_CLASS_DIR/submission/$(whoami).sh"
 # The `$CONFIG_FILE` environment variable is exported as it is used in the main
 # `script.sh.erb` file when launching the Jupyter server.
 export CONFIG_FILE="$PWD/config.py"
-export NOTEBOOK_ROOT="$HOME/osc_classes/$OSC_CLASS_ID"
 
 # Generate Jupyter configuration file with secure file permissions
 (
