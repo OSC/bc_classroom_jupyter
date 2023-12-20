@@ -1,0 +1,44 @@
+
+KERNEL_DIR="$JUPYTER_DATA_DIR/kernels/spark"
+KERNEL_WRAPPER=$KERNEL_DIR/osc_kernel_wrapper.sh
+KERNEL=$KERNEL_DIR/kernel.json
+
+mkdir -p $KERNEL_DIR
+touch $KERNEL_WRAPPER
+chmod +x $KERNEL_WRAPPER
+export KERNEL_WRAPPER
+
+cp -r $PWD/assets/*.png $KERNEL_DIR
+cp $PWD/kernel.json $KERNEL_DIR
+
+cat > "${KERNEL_WRAPPER}" << HEREDOC
+#!/bin/bash
+
+module load project/classroom xalt/latest classroom_jupyter/<%= context.module_type %>
+module load spark/3.4.1
+
+export PYTHONPATH="\${SPARK_HOME}/python:\$PYTHONPATH"
+export PYTHONPATH="\${SPARK_PY4J_PATH}:\$PYTHONPATH"
+export PYTHONSTARTUP="\${SPARK_HOME}/python/pyspark/shell.py"
+export PYSPARK_SUBMIT_ARGS=" \\
+    --master spark://\${SPARK_MASTER_HOST}:\${SPARK_MASTER_PORT} \\
+    --driver-memory ${OSC_SPARK_DRIVER_MEM:-256}m \\
+    --executor-memory ${OSC_SPARK_EXECUTOR_MEM:-256}m \\
+    --conf spark.driver.maxResultSize=0 \\
+    pyspark-shell"
+
+exec python "\${@}"
+HEREDOC
+
+cat > "$KERNEL" << HEREDOC
+{
+  "argv": [
+    "$KERNEL_WRAPPER",
+    "-m",
+    "ipykernel",
+    "-f",
+    "{connection_file}"
+  ],
+  "display_name": "PySpark"
+}
+HEREDOC

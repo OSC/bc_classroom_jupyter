@@ -89,3 +89,11 @@ c.NotebookApp.notebook_dir = '${NOTEBOOK_ROOT}'
 c.NotebookApp.disable_check_xsrf = True
 EOL
 )
+
+export SPARK_MASTER_HOST=${host}
+export SPARK_MASTER_PORT=$(find_port ${SPARK_MASTER_HOST})
+export SPARK_MASTER_WEBUI_PORT=$(find_port ${SPARK_MASTER_HOST})
+export SPARK_WORKER_CORES=$(nproc)
+export JUPYTER_DATA_DIR
+
+$PWD/spark.sh
