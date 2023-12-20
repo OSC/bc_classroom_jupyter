@@ -22,8 +22,8 @@ export PYTHONPATH="\${SPARK_PY4J_PATH}:\$PYTHONPATH"
 export PYTHONSTARTUP="\${SPARK_HOME}/python/pyspark/shell.py"
 export PYSPARK_SUBMIT_ARGS=" \\
     --master spark://\${SPARK_MASTER_HOST}:\${SPARK_MASTER_PORT} \\
-    --driver-memory ${OSC_SPARK_DRIVER_MEM:-256}m \\
-    --executor-memory ${OSC_SPARK_EXECUTOR_MEM:-256}m \\
+    --driver-memory ${OSC_SPARK_DRIVER_MEM:-1}G \\
+    --executor-memory ${OSC_SPARK_EXECUTOR_MEM:-1}G \\
     --conf spark.driver.maxResultSize=0 \\
     pyspark-shell"
 
