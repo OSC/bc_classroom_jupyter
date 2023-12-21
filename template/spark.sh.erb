@@ -1,4 +1,29 @@
 
+<%-
+  container_sizes = {
+    'small': {
+      'cores': 1,
+      'exec_mem': 1,
+      'driver_mem': 1
+    },
+    'medium': {
+      'cores': 2,
+      'exec_mem': 2,
+      'driver_mem': 2
+    },
+    'large': {
+      'cores': 4,
+      'exec_mem': 3,
+      'driver_mem': 2
+    },
+    'extra-large': {
+      'cores': 8,
+      'exec_mem': 3,
+      'driver_mem': 4
+    },
+  }
+-%>
+
 KERNEL_DIR="$JUPYTER_DATA_DIR/kernels/spark"
 KERNEL_WRAPPER=$KERNEL_DIR/osc_kernel_wrapper.sh
 KERNEL=$KERNEL_DIR/kernel.json
@@ -16,14 +41,14 @@ cat > "${KERNEL_WRAPPER}" << HEREDOC
 
 module load spark/3.4.1
 
-export SPARK_WORKER_CORES=4
+export SPARK_WORKER_CORES=<%= container_sizes[context.size.to_sym][:cores] %>
 
 export PYTHONPATH="\${SPARK_HOME}/python:\$PYTHONPATH"
 export PYTHONPATH="\${SPARK_PY4J_PATH}:\$PYTHONPATH"
 export PYTHONSTARTUP="\${SPARK_HOME}/python/pyspark/shell.py"
 export PYSPARK_SUBMIT_ARGS=" \\
-    --driver-memory ${OSC_SPARK_DRIVER_MEM:-1}G \\
-    --executor-memory ${OSC_SPARK_EXECUTOR_MEM:-1}G \\
+    --driver-memory <%= container_sizes[context.size.to_sym][:driver_mem] %>G \\
+    --executor-memory <%= container_sizes[context.size.to_sym][:exec_mem] %>G \\
     --conf spark.driver.maxResultSize=0 \\
     pyspark-shell"
 
