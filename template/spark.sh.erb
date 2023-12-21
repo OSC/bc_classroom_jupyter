@@ -14,7 +14,6 @@ cp $PWD/kernel.json $KERNEL_DIR
 cat > "${KERNEL_WRAPPER}" << HEREDOC
 #!/bin/bash
 
-module load project/classroom xalt/latest classroom_jupyter/<%= context.module_type %>
 module load spark/3.4.1
 
 export SPARK_WORKER_CORES=4
