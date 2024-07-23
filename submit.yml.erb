@@ -106,6 +106,6 @@ script:
 <%- else -%>
 script:
   accounting_id: "<%= account %>"
-  wall_time: "<%= time.to_f * 3600 %>"
+  wall_time: "<%= hours.to_f * 3600 %>"
   gpus_per_node: 1
 <%- end -%>
