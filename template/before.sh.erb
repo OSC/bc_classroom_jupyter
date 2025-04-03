@@ -27,7 +27,7 @@ export OSC_CLASS_ID="<%= context.classroom %>"
 export OSC_PROJECT_ID="<%= context.account %>"
 
 module purge
-module load project/classroom xalt/latest classroom_jupyter/<%= context.module_type %>
+module load project/classroom classroom_jupyter/<%= context.module_type %>
 
 # Safari users hit this error https://github.com/jupyterlab/jupyterlab/issues/5486
 # so let's make a new workspace dir that's this job's PWD and copy the defult /lab
