@@ -57,7 +57,7 @@ create_classroom_directory() {
   mkdir -v -p $class_dir/workspace
 }
 
-setup_jupyter_classroom() {
+create_jupyter_classroom() {
   project_dir="$1"
   class_dir="$project_dir/$class_id"
   jupyter_dir="$class_dir/jupyter"
@@ -99,9 +99,9 @@ setup_jupyter_classroom() {
 project_dir=$(find_project_directory)
 project_owner=$(find_project_owner)
 
-# Only inspector (project owner) can set up the classrooom
+# Only inspector (project owner) can create the classroom environment
 if [[ "$USER" == "$project_owner" ]]; then
-  setup_jupyter_classroom $project_dir
+  create_jupyter_classroom $project_dir
 fi
 
 class_dir="$project_dir/$class_id"
