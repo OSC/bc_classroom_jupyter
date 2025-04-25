@@ -1,12 +1,9 @@
 #!/bin/bash
 
-<%- if context.cluster =~ /kubernetes/ -%>
-exec &> >(tee -a "pod.log")
-<%- end -%>
-
 # Quit if any function returns an non-zero status.
 set -eE
 set -o pipefail
+set -x
 
 project_id="<%= context.account %>"
 class_id="<%= context.classroom %>"
@@ -37,7 +34,7 @@ find_project_directory() {
 
 find_project_owner() {
   project_dir=$(find_project_directory)
-  echo $(getfacl -t project_dir |& grep USER |awk '{print $2}')
+  echo $(stat -c %U $project_dir)
 }
 
 create_classroom_directory() {
@@ -74,17 +71,17 @@ create_jupyter_classroom() {
   echo "Creating Jupyter environment with $(which python3)"
   python3 -m venv --without-pip --prompt "$class_id" $jupyter_dir
   source $jupyter_dir/bin/activate
-  # curl https://bootstrap.pypa.io/get-pip.py |python # RHEL9
-  curl https://bootstrap.pypa.io/pip/3.6/get-pip.py |python # RHEL7
+  curl https://bootstrap.pypa.io/get-pip.py |python # RHEL9
+  # curl https://bootstrap.pypa.io/pip/3.6/get-pip.py |python # RHEL7
   pip install \
-	--log=${class_dir}/setup_jupyter.log --isolated \
+	--log=${class_dir}/setup_jupyter.log \
        	--no-cache-dir --ignore-installed \
 	jupyterlab notebook jupyter-console qtconsole ipywidgets
   deactivate
 
   echo "Setting up PDF exporter"
-  #pandoc_version=3.6.4 # RHEL9
-  pandoc_version=2.9.2  # RHEL7
+  pandoc_version=3.6.4 # RHEL9
+  #pandoc_version=2.9.2  # RHEL7
   pushd $jupyter_dir
   wget -nc https://github.com/jgm/pandoc/releases/download/${pandoc_version}/pandoc-${pandoc_version}-linux-amd64.tar.gz
   tar xf pandoc-${pandoc_version}-linux-amd64.tar.gz --strip=1
@@ -111,7 +108,7 @@ export OSC_CLASS_DIR="$class_dir"
 export OSC_CLASS_FILES="$class_dir/materials"
 
 # Load required modules
-LMOD_EXACT_MATCH=no module load texlive nodejs
+LMOD_EXACT_MATCH=no module load texlive node-js
 
 # Setup Jupyter
 export JUPYTER_DATA_DIR="${HOME}/osc_classes/${class_id}/.local/share/jupyter"
