@@ -80,8 +80,6 @@ create_jupyter_classroom() {
   deactivate
 
   echo "Setting up PDF exporter"
-  pandoc_version=3.6.4 # RHEL9
-  #pandoc_version=2.9.2  # RHEL7
   pushd $jupyter_dir
 
   test -d share/jupyter/nbconvert/templates/html || mkdir -p share/jupyter/nbconvert/templates/html
