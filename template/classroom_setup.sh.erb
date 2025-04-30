@@ -83,9 +83,7 @@ create_jupyter_classroom() {
   pandoc_version=3.6.4 # RHEL9
   #pandoc_version=2.9.2  # RHEL7
   pushd $jupyter_dir
-  wget -nc https://github.com/jgm/pandoc/releases/download/${pandoc_version}/pandoc-${pandoc_version}-linux-amd64.tar.gz
-  tar xf pandoc-${pandoc_version}-linux-amd64.tar.gz --strip=1
-  rm -f pandoc-${pandoc_version}-linux-amd64.tar.gz
+
   test -d share/jupyter/nbconvert/templates/html || mkdir -p share/jupyter/nbconvert/templates/html
   chmod -v g+rx $jupyter_dir/share/jupyter/nbconvert/templates/html
   

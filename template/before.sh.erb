@@ -25,6 +25,7 @@ PASSWORD_SHA1="$(echo -n "${password}${SALT}" | openssl dgst -sha1 | awk '{print
 
 # Set up classroom environment
 module purge
+module load pandoc/3.6.4
 source $PWD/classroom_setup.sh
 
 export OSC_CLASS_ID="<%= context.classroom %>"
