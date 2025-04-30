@@ -72,9 +72,8 @@ create_jupyter_classroom() {
   python3 -m venv --without-pip --prompt "$class_id" $jupyter_dir
   source $jupyter_dir/bin/activate
   curl https://bootstrap.pypa.io/get-pip.py |python # RHEL9
-  # curl https://bootstrap.pypa.io/pip/3.6/get-pip.py |python # RHEL7
   pip install \
-	--log=${class_dir}/setup_jupyter.log \
+	--log=${class_dir}/setup_jupyter.log --isolated \
        	--no-cache-dir --ignore-installed \
 	jupyterlab notebook jupyter-console qtconsole ipywidgets
   deactivate
