@@ -29,7 +29,7 @@
           name: name,
           size: size_to_num(class_config.fetch('size', 'small')),
           hours: class_config.fetch('hours', 1).to_i,
-          cluster_fs: class_config.fetch('cluster_fs', 'pitzer'),
+          cluster_fs: class_config.fetch('cluster_fs', 'cardinal'),
           module_type: class_config.fetch('module_type', 'default'),
           account: class_config.fetch('project', nil),
           cluster: cluster_id

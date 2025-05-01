@@ -32,8 +32,6 @@
       'memory': 32
     },
   }
-
-  apps_path = cluster_fs == 'pitzer' ? '/apps' : '/usr/local'
 -%>
 
 <% if cluster =~ /kubernetes/ -%>
@@ -44,7 +42,7 @@ script:
   native:
     container:
       name: "jupyter"
-      image: "docker-registry.osc.edu/ondemand/ondemand-base-rhel7:0.10.0"
+      image: "docker-registry.osc.edu/ondemand/ondemand-base-rhel9:0.13.0"
       image_pull_policy: "IfNotPresent"
       command: ["/bin/bash","-l","<%= staged_root %>/job_script_content.sh"]
       restart_policy: 'OnFailure'
@@ -94,15 +92,10 @@ script:
         path: /apps/<%= cluster_fs %>/lmod/lmod.sh
         destination_path: /etc/profile.d/lmod.sh
       - type: host
-        name: intel
-        host_type: Directory
-        path: /nfsroot/<%= cluster_fs %>/opt/intel
-        destination_path: /opt/intel
-      - type: host
         name: apps
         host_type: Directory
         path: "/apps/<%= cluster_fs %>"
-        destination_path: "<%= apps_path %>"
+        destination_path: "/apps"
 <%- else -%>
 script:
   accounting_id: "<%= account %>"

@@ -23,27 +23,31 @@ password="$(create_passwd 16)"
 PASSWORD_SHA1="$(echo -n "${password}${SALT}" | openssl dgst -sha1 | awk '{print $NF}')"
 <%- end -%>
 
+# Set up classroom environment
+module purge
+module load pandoc/3.6.4
+source $PWD/classroom_setup.sh
+
 export OSC_CLASS_ID="<%= context.classroom %>"
 export OSC_PROJECT_ID="<%= context.account %>"
-
-module purge
-module load project/classroom classroom_jupyter/<%= context.module_type %>
 
 # Safari users hit this error https://github.com/jupyterlab/jupyterlab/issues/5486
 # so let's make a new workspace dir that's this job's PWD and copy the defult /lab
 # workspace over there so folks can update it.
 WORKSPACE_DIR="$HOME/.jupyter/lab/workspaces"
-FILES=$(ls $WORKSPACE_DIR)
 
-for FILE in ${FILES[@]}
-do
-  ID=$(jq -r '.metadata.id' $WORKSPACE_DIR/$FILE)
+if [ -d "$WORKSPACE_DIR" ]; then
+  FILES=$(ls $WORKSPACE_DIR)
+  for FILE in ${FILES[@]}
+  do
+    ID=$(jq -r '.metadata.id' $WORKSPACE_DIR/$FILE)
 
-  if [[ $ID == "/lab" ]]; then
-    WORKSPACE_FILE="$WORKSPACE_DIR/$FILE"
-    break
-  fi
-done
+    if [[ $ID == "/lab" ]]; then
+      WORKSPACE_FILE="$WORKSPACE_DIR/$FILE"
+      break
+    fi
+  done
+fi
 
 if [[ ${WORKSPACE_FILE+x} ]]; then
   cp "$WORKSPACE_FILE" .

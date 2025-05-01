@@ -1,0 +1,116 @@
+#!/bin/bash
+
+# Quit if any function returns an non-zero status.
+set -eE
+set -o pipefail
+set -x
+
+project_id="<%= context.account %>"
+class_id="<%= context.classroom %>"
+classroom_version="<%= context.module_type %>"
+
+find_project_directory() {
+  ESS_DIR="/fs/ess/$project_id"
+  PROJ_DIR="/fs/project/$project_id"
+  if [[ -d $ESS_DIR ]]; then
+    echo $ESS_DIR
+    ls $ESS_DIR > /dev/null 2>&1
+    if [[ $? != 0 ]]; then
+      echo "Cannot access $ESS_DIR"
+      exit 1
+    fi
+  elif [[ -d $PROJ_DIR ]]; then
+    echo $PROJ_DIR
+    ls $PROJ_DIR > /dev/null 2>&1
+    if [[ $? != 0 ]]; then
+      echo "Cannot access $PROJ_DIR"
+      exit 1
+    fi
+  else
+    echo "Cannot find any project directory for {project_id}"
+    exit 1
+  fi
+}
+
+find_project_owner() {
+  project_dir=$(find_project_directory)
+  echo $(stat -c %U $project_dir)
+}
+
+create_classroom_directory() {
+  class_dir=$1
+
+  echo "Creating class directory $class_dir" 
+  umask 027
+  mkdir -v -p $class_dir
+  chgrp $project_id $class_dir
+  chmod g+s $class_dir
+  setfacl -R -d -m g:${project_id}:r-X $class_dir
+
+  echo "Creating materials directory $class_dir/materials"
+  mkdir -v -p $class_dir/materials
+
+  echo "Creating workspace directory $class_dir/workspace"
+  mkdir -v -p $class_dir/workspace
+}
+
+create_jupyter_classroom() {
+  project_dir="$1"
+  class_dir="$project_dir/$class_id"
+  jupyter_dir="$class_dir/jupyter"
+
+  if [[ -d $jupyter_dir ]]; then
+    echo "The Jupyter environment $jupyter_dir has been created"
+    return 0
+  fi
+
+  if [[ ! -d $class_dir ]]; then
+    create_classroom_directory $class_dir
+  fi
+
+  echo "Creating Jupyter environment with $(which python3)"
+  python3 -m venv --without-pip --prompt "$class_id" $jupyter_dir
+  source $jupyter_dir/bin/activate
+  curl https://bootstrap.pypa.io/get-pip.py |python # RHEL9
+  pip install \
+	--log=${class_dir}/setup_jupyter.log --isolated \
+       	--no-cache-dir --ignore-installed \
+	jupyterlab notebook jupyter-console qtconsole ipywidgets
+  deactivate
+
+  echo "Setting up PDF exporter"
+  pushd $jupyter_dir
+
+  test -d share/jupyter/nbconvert/templates/html || mkdir -p share/jupyter/nbconvert/templates/html
+  chmod -v g+rx $jupyter_dir/share/jupyter/nbconvert/templates/html
+  
+  echo "Disabling the group permission of Jupyter environment"
+  chmod g-w -R ${jupyter_dir}
+}
+
+project_dir=$(find_project_directory)
+project_owner=$(find_project_owner)
+
+# Only inspector (project owner) can create the classroom environment
+if [[ "$USER" == "$project_owner" ]]; then
+  create_jupyter_classroom $project_dir
+fi
+
+class_dir="$project_dir/$class_id"
+export OSC_CLASS_DIR="$class_dir"
+
+# Define material directory
+export OSC_CLASS_FILES="$class_dir/materials"
+
+# Load required modules
+LMOD_EXACT_MATCH=no module load texlive node-js
+
+# Setup Jupyter
+export JUPYTER_DATA_DIR="${HOME}/osc_classes/${class_id}/.local/share/jupyter"
+jupyter_dir="$class_dir/jupyter"
+ls $jupyter_dir > /dev/null 2>&1
+if [[ $? == 0 ]]; then 
+  source ${jupyter_dir}/bin/activate
+else
+  echo "Cannot access ${jupyter_dir}. Please contact OSC help or class instructor." >&2
+fi
