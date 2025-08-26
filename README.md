@@ -51,10 +51,10 @@ v2:
           size: large
           hours: 3
 ```
-- Class name - displayed in the jupyter app for student/faculty to select to launch a particular classroom, only visible to students that are in the classroom
+- Class name - displayed in the jupyter app for student/faculty to select to launch a particular classroom, only visible to students that are in the classroom.
 - project - OSC project name with corresponding linux group used for managing access.
-- size - the resource requirements for the notebook, for example at OSC we define three classes: small, mediaum and large as configured in submit.yml.erb
-- hours - default duration for the interactive jupyter session as specified by the instructor, e.g. 2 hours for a 90 minute class
+- size - the resource requirements for the notebook, for example at OSC we define three classes: small, medium and large as configured in ```submit.yml.erb```.
+- hours - default duration for the interactive jupyter session as specified by the instructor, e.g. 2 hours for a 90 minute class.
 
 ## Launch Workflow
 
