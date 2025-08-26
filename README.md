@@ -1,7 +1,7 @@
 # Classroom Jupyter App
 
 This is a simplified Jupyter OnDemand app that the
-Ohio Supercomputer Center uses for classrooms. This guide assumes you already know how to deploy Jupyter via Open OnDemand. 
+Ohio Supercomputer Center uses for classrooms deployed via kubernetes. This guide assumes you already know [how](https://osc.github.io/ood-documentation/release-1.8/app-development/tutorials-interactive-apps/add-jupyter.html) to deploy Jupyter via Open OnDemand. 
 It focuses on customizing the classroom app to support isolated and shared Python environments using OSC project spaces, where instructors
 can share packages and materials with students.
 
@@ -22,10 +22,10 @@ This structure ensures:
 
 - Instructors have full write access
 - Students have read-only access to ``materials/`` and ``venv/``
-- Students copy materials into their own workspace at session start
+- Materials are copied to students workspace during launch time.
 
 ## Environment Setup
-``The Classroom_setup.erb`` script creates class directories in the project space along with the Jupyter environment. It also creates a classroom workspace for each student under their ``$HOME``.
+The ``classroom_setup.sh.erb`` script creates class directories in the project space along with the Jupyter environment. It also creates a classroom workspace for each student under their ``$HOME``.
 
  
 ## Sharing Materials
@@ -51,7 +51,10 @@ v2:
           size: large
           hours: 3
 ```
-
+- Class name - displayed in the jupyter app for student/faculty to select to launch a particular classroom, only visible to students that are in the classroom
+- project - OSC project name with corresponding linux group used for managing access.
+- size - the resource requirements for the notebook, for example at OSC we define three classes: small, mediaum and large as configured in submit.yml.erb
+- hours - default duration for the interactive jupyter session as specified by the instructor, e.g. 2 hours for a 90 minute class
 
 ## Launch Workflow
 
