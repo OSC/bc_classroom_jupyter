@@ -29,8 +29,9 @@
           name: name,
           size: size_to_num(class_config.fetch('size', 'small')),
           hours: class_config.fetch('hours', 1).to_i,
-          cluster_fs: class_config.fetch('cluster_fs', 'cardinal'),
+          cluster_fs: class_config.fetch('cluster_fs', 'ascend'),
           module_type: class_config.fetch('module_type', 'default'),
+          gpus: class_config.fetch('gpus', 0).to_i,
           account: class_config.fetch('project', nil),
           cluster: cluster_id
         }
@@ -50,6 +51,7 @@ form:
   - jupyterlab_switch
   - size
   - hours
+  - gpus
   - cluster_fs
   - module_type
 attributes:
@@ -127,6 +129,20 @@ attributes:
       * **medium** - 2 cores & 8 GB of memory.
       * **large** - 4 cores & 16 GB of memory.
       * **extra-large** - 8 cores & 32 GB of memory.
+
+  gpus:
+  <%- classrooms.map do |c| -%>
+    <%- if c[:gpus].to_i > 0 %>
+    widget: number_field
+    label: 'GPUs'
+    value: 0
+    help: |
+      Select '0' for CPU only.
+    min: 0
+    max: <%= c[:gpus].to_i %>
+    step: 1
+    <%- end %>
+  <%- end %>
 
   classroom:
   <%- if classrooms.size >= 1 -%>
