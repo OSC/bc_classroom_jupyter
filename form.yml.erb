@@ -131,18 +131,14 @@ attributes:
       * **extra-large** - 8 cores & 32 GB of memory.
 
   gpus:
-  <%- classrooms.map do |c| -%>
-    <%- if c[:gpus].to_i > 0 %>
     widget: number_field
     label: 'GPUs'
     value: 0
     help: |
       Select '0' for CPU only.
     min: 0
-    max: <%= c[:gpus].to_i %>
+    max: 1
     step: 1
-    <%- end %>
-  <%- end %>
 
   classroom:
   <%- if classrooms.size >= 1 -%>
@@ -154,7 +150,15 @@ attributes:
         data-set-account: "<%= cr[:account] %>",
         data-set-cluster-fs: "<%= cr[:cluster_fs] %>",
         data-set-module-type: "<%= cr[:module_type] %>",
-        data-set-cluster: "<%= cr[:cluster] %>"
+        data-set-cluster: "<%= cr[:cluster] %>",
+        <%- if cr[:gpus].to_i.positive? -%>
+        data-set-gpus: 0,
+        data-max-gpus: <%= cr[:gpus].to_i %>,
+        data-hide-gpus: false,
+        <%- else -%>
+        data-set-gpus: 0,
+        data-hide-gpus: true,
+        <%- end -%>
         ]
       <%- end %>
   <%- else -%>
