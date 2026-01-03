@@ -39,6 +39,9 @@
 script:
   accounting_id: "<%= account %>"
   wall_time: "<%= hours.to_f * 3600 %>"
+  <%- if gpus.to_i > 0 -%>
+  gpus_per_node: <%= gpus.to_i %>
+  <%- end -%>
   native:
     container:
       name: "jupyter"
