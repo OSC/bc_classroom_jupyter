@@ -71,7 +71,11 @@ create_jupyter_classroom() {
   echo "Creating Jupyter environment with $(which python3)"
   python3 -m venv --without-pip --prompt "$class_id" $jupyter_dir
   source $jupyter_dir/bin/activate
-  curl https://bootstrap.pypa.io/get-pip.py |python # RHEL9
+  curl https://bootstrap.pypa.io/get-pip.py |python && echo no trap > /dev/null; status=$?
+  if [[ $status -ne 0 ]]; then
+    pyver=$(python3 --version | awk '{print $2}' | cut -d'.' -f1-2)
+    curl https://bootstrap.pypa.io/pip/${pyver}/get-pip.py |python3
+  fi
   pip install \
 	--log=${class_dir}/setup_jupyter.log --isolated \
        	--no-cache-dir --ignore-installed \
@@ -91,8 +95,8 @@ create_jupyter_classroom() {
 project_dir=$(find_project_directory)
 project_owner=$(find_project_owner)
 
-# Only inspector (project owner) can create the classroom environment
-if [[ "$USER" == "$project_owner" ]]; then
+# Only inspector (project owner) or OSC staff in PZS1118 can create the classroom environment
+if [[ "$USER" == "$project_owner" ]] || [[ "$project_id" == "PZS1118" ]]; then
   create_jupyter_classroom $project_dir
 fi
 
