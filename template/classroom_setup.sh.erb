@@ -45,13 +45,15 @@ create_classroom_directory() {
   mkdir -v -p $class_dir
   chgrp $project_id $class_dir
   chmod g+s $class_dir
-  setfacl -R -d -m g:${project_id}:r-X $class_dir
 
   echo "Creating materials directory $class_dir/materials"
   mkdir -v -p $class_dir/materials
 
   echo "Creating workspace directory $class_dir/workspace"
   mkdir -v -p $class_dir/workspace
+
+  echo "Update the permission of the class diretory"
+  setfacl -R -d -m g:${project_id}:r-X $class_dir
 }
 
 create_jupyter_classroom() {
