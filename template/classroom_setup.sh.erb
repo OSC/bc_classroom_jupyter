@@ -53,7 +53,7 @@ create_classroom_directory() {
   mkdir -v -p $class_dir/workspace
 
   echo "Update the permission of the class diretory"
-  setfacl -R -d -m g:${project_id}:r-X $class_dir
+  setfacl -R -d -m g:${project_id}:r-X $class_dir || true
 }
 
 create_jupyter_classroom() {
