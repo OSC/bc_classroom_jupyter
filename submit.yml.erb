@@ -56,9 +56,9 @@ script:
       memory: "<%= container_sizes[size.to_sym][:memory] %>Gi"
     node_selector:
       node-role.kubernetes.io/ondemand: ''
-      <%- if gpus.to_i > 0 -%>
-      gpu_type: 'nvidia.com/mig-1g.5gb'
-      <%- end -%>
+    <%- if gpus.to_i > 0 -%>
+    gpu_type: 'nvidia.com/mig-1g.5gb'
+    <%- end -%>
     mounts:
     <%- mounts.each_pair do |name, mount| -%>
       - type: host
