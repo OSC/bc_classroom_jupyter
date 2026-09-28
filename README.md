@@ -15,13 +15,13 @@ Each classroom is assigned a dedicated project space on the cluster’s shared f
 Within this space, instructors organize:
 
 - ``materials``: Shared notebooks, datasets, and requirements
-- ``venv``: Python virtual environment (created by instructor)
+- ``jupyter``: Python virtual environment (created by instructor)
 - ``data``: Optional large datasets
  
 This structure ensures:
 
 - Instructors have full write access
-- Students have read-only access to ``materials/`` and ``venv/``
+- Students have read-only access to ``materials/`` and ``jupyter/``
 - Materials are copied to students workspace during launch time.
 
 ## Environment Setup
