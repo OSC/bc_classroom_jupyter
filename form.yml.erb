@@ -32,7 +32,7 @@
           cluster_fs: class_config.fetch('cluster_fs', 'ascend'),
           module_type: class_config.fetch('module_type', 'default'),
           gpus: class_config.fetch('gpus', 0).to_i,
-          enable_gpu_type: class_config.fetch('enable_gpu_type', 0).to_i,
+          extra_gpu_mem: class_config.fetch('extra_gpu_mem', false),
           account: class_config.fetch('project', nil),
           cluster: cluster_id
         }
@@ -53,7 +53,7 @@ form:
   - size
   - hours
   - gpus
-  - gpu_type
+  - extra_gpu_mem
   - cluster_fs
   - module_type
 attributes:
@@ -139,16 +139,12 @@ attributes:
     help: |
       Select '0' for CPU only.
     min: 0
-    max: 1
-    step: 1
 
-  gpu_type:
-    widget: select
-    label: "GPU memory"
-    options:
-      - [ "5GB",  "nvidia.com/mig-1g.5gb"  ]
-      - [ "20GB", "nvidia.com/mig-3g.20gb" ]
-      - [ "40GB", "nvidia.com/mig-7g.40gb" ]
+  extra_gpu_mem:
+    widget: check_box
+    label: "40GB GPU Memory"
+    value: 0
+
   classroom:
   <%- if classrooms.size >= 1 -%>
     widget: select
@@ -161,18 +157,15 @@ attributes:
         data-set-module-type: "<%= cr[:module_type] %>",
         data-set-cluster: "<%= cr[:cluster] %>",
         <%- if cr[:gpus].to_i.positive? -%>
-        data-set-gpus: 0,
         data-max-gpus: <%= cr[:gpus].to_i %>,
         data-hide-gpus: false,
         <%- else -%>
         data-set-gpus: 0,
         data-hide-gpus: true,
         <%- end -%>
-        <%- if cr[:enable_gpu_type].to_i.positive? -%>
-        data-hide-gpu-type: false,
-        <%- else -%>
-        data-hide-gpu-type: true,
-        data-set-gpu-type: "nvidia.com/mig-1g.5gb"
+        <%- if cr[:extra_gpu_mem] != true -%>
+        data-set-extra-gpu-mem: 0,
+        data-hide-extra-gpu-mem: true,
         <%- end -%>
         ]
       <%- end %>
