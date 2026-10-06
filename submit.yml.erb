@@ -57,7 +57,7 @@ script:
     node_selector:
       node-role.kubernetes.io/ondemand: ''
     <%- if gpus.to_i > 0 -%>
-    gpu_type: <%= extra_gpu_mem.to_i == 1 ? "nvidia.com/mig-7g.40gb" : "nvidia.com/mig-1g.5gb" %>
+    gpu_type: <%= extra_gpu_mem.to_i == 1 ? extra_gpu_type : "nvidia.com/mig-1g.5gb" %>
     <%- end -%>
     mounts:
     <%- mounts.each_pair do |name, mount| -%>

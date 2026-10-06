@@ -32,7 +32,7 @@
           cluster_fs: class_config.fetch('cluster_fs', 'ascend'),
           module_type: class_config.fetch('module_type', 'default'),
           gpus: class_config.fetch('gpus', 0).to_i,
-          extra_gpu_mem: class_config.fetch('extra_gpu_mem', false),
+          extra_gpu_type: class_config.fetch('extra_gpu_type', ""),
           account: class_config.fetch('project', nil),
           cluster: cluster_id
         }
@@ -54,6 +54,7 @@ form:
   - hours
   - gpus
   - extra_gpu_mem
+  - extra_gpu_type
   - cluster_fs
   - module_type
 attributes:
@@ -142,8 +143,11 @@ attributes:
 
   extra_gpu_mem:
     widget: check_box
-    label: "40GB GPU Memory"
+    label: "GPU memory is 5GB by default. Check this box to enable extra memory dedicated for the classroom."
     value: 0
+
+  extra_gpu_type:
+    widget: hidden_field
 
   classroom:
   <%- if classrooms.size >= 1 -%>
@@ -163,10 +167,13 @@ attributes:
         data-set-gpus: 0,
         data-hide-gpus: true,
         <%- end -%>
-        <%- if cr[:extra_gpu_mem] != true -%>
-        data-set-extra-gpu-mem: 0,
+        <%- if cr[:extra_gpu_type].empty? -%>
         data-hide-extra-gpu-mem: true,
-        <%- end -%>
+        data-set-extra-gpu-mem: 0,
+        <%- else -%>
+        data-hide-extra-gpu-mem: false,
+        data-set-extra-gpu-type: "<%= cr[:extra_gpu_type] %>",
+      <%- end -%>
         ]
       <%- end %>
   <%- else -%>
